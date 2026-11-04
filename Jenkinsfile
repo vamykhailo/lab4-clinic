@@ -39,16 +39,30 @@ pipeline {
             }
         }
 
-        stage('Build images') {
+               stage('Build images') {
             steps {
                 sh '''
                     docker build -f Dockerfile.registry \
-                        -t lab4-clinic-registry:${BUILD_NUMBER} .
+                        -t vamykhailo/lab4-clinic-registry:${BUILD_NUMBER} .
 
                     docker build -f Dockerfile.appointments \
-                        -t lab4-clinic-appointments:${BUILD_NUMBER} .
+                        -t vamykhailo/lab4-clinic-appointments:${BUILD_NUMBER} .
                 '''
             }
         }
-    }
-}
+
+        stage('Push images') {
+            steps {
+                script {
+                    docker.withRegistry(
+                        'https://index.docker.io/v1/',
+                        'dockerhub'
+                    ) {
+                        sh '''
+                            docker push vamykhailo/lab4-clinic-registry:${BUILD_NUMBER}
+                            docker push vamykhailo/lab4-clinic-appointments:${BUILD_NUMBER}
+                        '''
+                    }
+                }
+            }
+        }
