@@ -5,3 +5,4 @@
 
 Jenkins виконує тести, збирає Docker-образи
 та публікує їх у Docker Hub.
+Налаштовано автоматичний запуск Jenkins через GitHub webhook.
